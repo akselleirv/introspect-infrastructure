@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+    introspect-frontend:
+        image: akselleirv/introspect-frontend:0.2
+        container_name: introspect-frontend
+        restart: unless-stopped
+        networks:
+            - app-network 
+    introspect-backend:
+        image: akselleirv/introspect-backend:0.1
+        container_name: introspect-backend
+        restart: unless-stopped
+        networks:
+            - app-network
+    loadbalancer:
+        image: nginx:mainline-alpine
+        ports:
+        - "80:80"
+        volumes:
+            - web-root:/var/www/html
+            - ./nginx-conf:/etc/nginx/conf.d
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
+        depends_on:
+            - introspect-frontend
+            - introspect-backend
+        networks:
+            - app-network   
+    certbot:
+        image: certbot/certbot
+        volumes:
+            - certbot-etc:/etc/letsencrypt
+            - certbot-var:/var/lib/letsencrypt
+            - web-root:/var/www/html
+        depends_on:
+            - loadbalancer
+        command: certonly --webroot --webroot-path=/var/www/html --email akselleirv@gmail.com --agree-tos --no-eff-email --staging -d introspect.no  -d www.introspect.no                      
+
+volumes:
+    certbot-etc:
+    certbot-var:
+    web-root:
+
+networks:
+    app-network:
+        driver: bridge                          
