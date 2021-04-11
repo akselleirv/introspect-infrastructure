@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+    introspect-frontend:
+        image: akselleirv/introspect-frontend:test-build
+        container_name: introspect-frontend
+        restart: unless-stopped
+    introspect-backend:
+        image: akselleirv/introspect-backend:test-build
+        container_name: introspect-backend
+        restart: unless-stopped
+    nginx:
+        image: nginx:mainline-alpine
+        container_name: nginx
+        restart: unless-stopped
+        volumes:
+          - ./data/nginx:/etc/nginx/conf.d
+        ports:
+          - "80:80"
+        depends_on:
+            - introspect-frontend
+            - introspect-backend

@@ -1,11 +1,11 @@
 version: '3.8'
 services:
     introspect-frontend:
-        image: akselleirv/introspect-frontend:0.2
+        image: akselleirv/introspect-frontend:0.4
         container_name: introspect-frontend
         restart: unless-stopped
     introspect-backend:
-        image: akselleirv/introspect-backend:0.1
+        image: akselleirv/introspect-backend:0.2
         container_name: introspect-backend
         restart: unless-stopped
     nginx:
