@@ -36,5 +36,5 @@ services:
         restart: unless-stopped
         volumes: 
           - /var/run/docker.sock:/var/run/docker.sock
-        command: --cleanup true introspect-backend introspect-frontend
+        command: --interval 60 --cleanup true introspect-backend introspect-frontend
                              
