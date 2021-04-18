@@ -1,11 +1,11 @@
 version: '3.8'
 services:
     introspect-frontend:
-        image: akselleirv/introspect-frontend:0.4
+        image: akselleirv/introspect-frontend:latest
         container_name: introspect-frontend
         restart: unless-stopped
     introspect-backend:
-        image: akselleirv/introspect-backend:0.2
+        image: akselleirv/introspect-backend:latest
         container_name: introspect-backend
         restart: unless-stopped
     nginx:
@@ -29,4 +29,12 @@ services:
         volumes:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
-        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"                 
+        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    watchtower:
+        image: containrrr/watchtower
+        container_name: watchtower
+        restart: unless-stopped
+        volumes: 
+          - /var/run/docker.sock:/var/run/docker.sock
+        command: --cleanup true introspect-backend introspect-frontend
+                             
